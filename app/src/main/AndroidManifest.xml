@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.ranlevy.myapplication">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="TRIGON 2019 Scouting"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TeamSelectActivity"
+            android:parentActivityName=".MainActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TeamSelectActivity" />
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+        />
+        <activity
+            android:name=".AutoGame"
+            android:label="Auto Game"
+            android:parentActivityName=".TeamSelectActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AutoGame" />
+        </activity>
+        <activity
+            android:name=".NormalGame"
+            android:label="Normal Game"
+            android:parentActivityName=".TeamSelectActivity">
+            android:name=".TeamSelectActivity"
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NormalGame" />
+        </activity>
+        <activity
+            android:name=".PersonalFeedback"
+            android:label="Data Summary"
+            android:parentActivityName=".TeamSelectActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PersonalFeedback" />
+        </activity>
+        <activity
+            android:name=".End"
+            android:label="End"
+            android:parentActivityName=".PersonalFeedback">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".End" />
+        </activity>
+        <activity android:name=".Climb"
+            android:label="Climb"
+            android:parentActivityName=".Climb">
+
+        </activity>
+    </application>
+
+</manifest>
