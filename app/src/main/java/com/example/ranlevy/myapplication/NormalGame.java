@@ -1,151 +1,173 @@
 package com.example.ranlevy.myapplication;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class NormalGame extends AppCompatActivity {
 
-    int highCargo = 0;
-    int mediumCargo = 0;
-    int lowCargo = 0;
-    int highHatch = 0;
-    int mediumHatch = 0;
-    int lowHatch = 0;
-    int cargocargo = 0;
-    int hatchcargo = 0;
-    int cargoRocket = 0;
-    int hatchRocket = 0;
 
-    Button high;
-    Button medium;
-    Button low;
-    Button cargoRocketB;
-    Button hatchRocketB;
-    Button cargoRocketDec;
-    Button hatchRocketDec;
-    Button cargocargoB;
-    Button hatchcargoB;
-    Button cargocargoDec;
-    Button hatchcargoDec;
+    Button btnCargoshipHatch;
+    Button btnCargoshipCargo;
+    Button btnCargoshipHatchDec;
+    Button btnCargoShipCargoDec;
     Button climb;
 
-    long autoHatchCount, teamNumber, startLevel, autoCargoCount;
+    int[] cargoScored, hatchScored;
+    int shipCargo = 0, shipHatch = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_normal_game);
 
         Intent intent = getIntent();
-        this.teamNumber = intent.getLongExtra("teamNumber", 0);
-        this.autoHatchCount = intent.getIntExtra("autoHatchCount", 0);
-        this.startLevel = intent.getIntExtra("startLevel", 0);
-        this.autoCargoCount = intent.getIntExtra("autoCargoCount", 0);
-        this.high = (Button) findViewById(R.id.high);
-        this.medium = (Button) findViewById(R.id.medium);
-        this.low = (Button) findViewById(R.id.low);
-        this.cargocargoDec = (Button) findViewById(R.id.cargocargoDec);
-        this.cargoRocketB = (Button) findViewById(R.id.cargoRocket);
-        this.hatchRocketB = (Button) findViewById(R.id.hatchRocket);
-        this.cargoRocketDec = (Button) findViewById(R.id.cargoRocketDec);
-        this.hatchRocketDec = (Button) findViewById(R.id.hatchRocketDec);
-        this.cargocargoB = (Button) findViewById(R.id.cargocargo);
-        this.hatchcargoB = (Button) findViewById(R.id.hatchcargo);
-        this.hatchcargoDec = (Button) findViewById(R.id.hatchcargoDec);
+        boolean isAuto = intent.getBooleanExtra("is_auto",false);
+        if(isAuto)
+            setTitle("Auto period");
+
+        this.btnCargoshipHatch = (Button) findViewById(R.id.normal_game_cargoship_hatch);
+        this.btnCargoshipHatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shipHatch < 8)
+                    shipHatch++;
+                ((Button) view).setText("HATCH " + shipHatch);
+            }
+        });
+        this.btnCargoshipCargo = (Button) findViewById(R.id.normal_game_cargoship_cargo);
+        this.btnCargoshipCargo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shipCargo < 8)
+                    shipCargo++;
+                ((Button) view).setText("CARGO " + shipCargo);
+            }
+        });
+        this.btnCargoShipCargoDec = (Button) findViewById(R.id.normal_game_cargoship_cargo_dec);
+        this.btnCargoShipCargoDec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shipCargo > 0)
+                    shipCargo--;
+                btnCargoshipCargo.setText("CARGO " + shipCargo);
+            }
+        });
+        this.btnCargoshipHatchDec = (Button) findViewById(R.id.normal_game_cargoship_hatch_dec);
+        this.btnCargoshipHatchDec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shipHatch > 0)
+                    shipHatch--;
+                btnCargoshipHatch.setText("HATCH " + shipHatch);
+            }
+        });
         this.climb = (Button) findViewById(R.id.climb);
+        climb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                climb();
+            }
+        });
+
+
+        this.cargoScored = new int[3];
+        this.hatchScored = new int[3];
     }
-//
-//        high.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                cargoRocketB.setOnClickListener(new View.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(View view) {
-//                        highCargo++;
-//                        cargoRocketB.setText("cargo  " + Integer.toString(highCargo));
-//                    }
-//        });
-//
-//    }
-//    public void highCargo(View view) {
-//        this.SwitchCount++;
-//        this.switchIncButton.setText("switch  " + Integer.toString(this.SwitchCount));
-//    }
-//
-//    public void EnemySwitchInc(View view) {
-//        this.EnemySwitchCount++;
-//        this.EnemySwitchButton.setText("Enemy Switch  " + Integer.toString(this.EnemySwitchCount));
-//    }
-//    public void EnemySwitchminus(View view) {
-//        if (EnemySwitchCount>0)
-//        {
-//            this.EnemySwitchCount--;
-//            this.EnemySwitchButton.setText("Enemy Switch  " + Integer.toString(this.EnemySwitchCount));
-//        }
-//    }
-//    public void scaleInc(View view) {
-//        this.ScaleCount++;
-//        this.scaleincButton.setText("scale  " + Integer.toString(this.ScaleCount));
-//
-//    }
-////
-//    public void exchangeInc(View view) {
-//        this.ExchangeCount++;
-//        this.exchangeIncButton.setText("exchange  " + Integer.toString(this.ExchangeCount));
-//
-//    }
-//    public void exchangeIncminus(View view) {
-//        if (ExchangeCount>0)
-//        {
-//            this.ExchangeCount--;
-//            this.exchangeIncButton.setText("exchange  " + Integer.toString(this.ExchangeCount));
-//        }
-//    }
-////    public void Climbminus(View view) {
-////        if (autoLineCount>0)
-////        {
-////            this.autoLineCount--;
-////            this.autoLineIncButton.setText("auto Line  " + Integer.toString(this.autoLineCount));
-////        }
-////    }
-//    public void scaleIncminus(View view) {
-//        if (ScaleCount>0) {
-//            this.ScaleCount--;
-//            this.scaleincButton.setText("scale  " + Integer.toString(this.ScaleCount));
-//        }
-//    }
-//    public void switchIncminus(View view) {
-//        if (SwitchCount>0)
-//        {
-//            this.SwitchCount--;
-//            this.switchIncButton.setText("switch  " + Integer.toString(this.SwitchCount));
-//        }
-//    }
-    public void climb(View view) {
 
-        Intent intent = new Intent(this, Climb.class);
-        intent.putExtra("teamNumber", teamNumber);
-//        intent.putExtra("autoSwitchCount", autoSwitchCount);
-//        intent.putExtra("autoScaleCount", autoScaleCount);
-//        intent.putExtra("autoLineCount", autoLineCount);
-//        intent.putExtra("SwitchCount", SwitchCount);
-//        intent.putExtra("ScaleCount", ScaleCount);
-//        intent.putExtra("ExchangeCount", ExchangeCount);
-//        intent.putExtra("autoexchangeCount", autoexchangeCount);
-//        intent.putExtra("EnemySwitchCount", EnemySwitchCount);
+    public void updateCounter(View v) {
+        Button btn = (Button) v;
+        String name = getId(v);
+        Log.d("Normal game btn clicked", name);
+        String[] parts = name.split("_");
+        String gamePiece = parts[2]; // cargo/hatch
+        String height = parts[3]; // low/medium/high
+        String op = parts[4]; // inc/dec
 
+        int current = Integer.parseInt(btn.getText().toString());
+
+        int newValue = updateArray((gamePiece.equals("cargo") ? cargoScored : hatchScored), getHeightIdx(height), (op.equals("inc") ? 1 : -1));
+        if (op.equals("inc"))
+            btn.setText("" + newValue);
+        else {
+            String incName = name.replace("dec", "inc");
+            Log.d("Normal game btn clicked", incName);
+            Button incBtn = findViewById(getResources().getIdentifier(incName, "id", getPackageName()));
+            Log.d("Normal game btn clicked", incBtn.toString());
+            incBtn.setText("" + newValue);
+//            ((Button) findViewById(getResources().getIdentifier(incName, "id", "app.dj")))
+//                    .setText("" + newValue);
+        }
+    }
+
+    private int getHeightIdx(String hName) {
+        if (hName.equals("low")) return 0;
+        if (hName.equals("medium")) return 1;
+        if (hName.equals("high")) return 2;
+        return -1;
+    }
+
+    private int updateArray(int[] arr, int height, int addition) {
+        if (height < 0)
+            return -1;
+
+        arr[height] += addition;
+        if (arr[height] < 0) arr[height] = 0;
+        if (arr[height] > 4) arr[height] = 4;
+        return arr[height];
+    }
+
+    @SuppressLint("ResourceType")
+    private String getId(View view) {
+        if (view.getId() == 0xffffffff) return "no-id";
+        else return view.getResources().getResourceEntryName(view.getId());
+    }
+
+    public void climb() {
+
+        Intent prevIntent = getIntent();
+        boolean isAuto = prevIntent.getBooleanExtra("is_auto",false);
+        Log.d("Normal game",isAuto+"");
+        Intent intent = null;
+        if(!isAuto) {
+            intent = new Intent(this, Climb.class);
+            intent.putExtras(prevIntent);
+            // Add rocket points
+            intent.putExtra("teleop_rocket_cargo_low", cargoScored[0]);
+            intent.putExtra("teleop_rocket_cargo_medium", cargoScored[1]);
+            intent.putExtra("teleop_rocket_cargo_high", cargoScored[2]);
+
+            intent.putExtra("teleop_rocket_hatch_low", hatchScored[0]);
+            intent.putExtra("teleop_rocket_hatch_medium", hatchScored[1]);
+            intent.putExtra("teleop_rocket_hatch_high", hatchScored[2]);
+
+            // Ship points
+            intent.putExtra("teleop_ship_cargo", shipCargo);
+            intent.putExtra("teleop_ship_hatch", shipHatch);
+        }else{
+            intent = new Intent(this,NormalGame.class);
+            intent.putExtras(prevIntent);
+            intent.putExtra("is_auto",false);
+            // Add rocket points
+            intent.putExtra("auto_rocket_cargo_low", cargoScored[0]);
+            intent.putExtra("auto_rocket_cargo_medium", cargoScored[1]);
+            intent.putExtra("auto_rocket_cargo_high", cargoScored[2]);
+
+            intent.putExtra("auto_rocket_hatch_low", hatchScored[0]);
+            intent.putExtra("auto_rocket_hatch_medium", hatchScored[1]);
+            intent.putExtra("auto_rocket_hatch_high", hatchScored[2]);
+
+            // Ship points
+            intent.putExtra("auto_ship_cargo", shipCargo);
+            intent.putExtra("auto_ship_hatch", shipHatch);
+        }
 
 
         startActivity(intent);
     }
-
 
 }

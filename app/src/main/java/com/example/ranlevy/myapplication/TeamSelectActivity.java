@@ -1,8 +1,11 @@
 package com.example.ranlevy.myapplication;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +30,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 
@@ -38,8 +48,10 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
     private SearchView searchView;
     private MenuItem searchMenuItem;
     TeamAdapter adapter;
-    private String match_number;
 
+    private static final String TEAMS_FILE_NAME = "Teams.txt";
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,34 +61,12 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
         this.listview.setTextFilterEnabled(true);
 
         final ArrayList<Team> list = new ArrayList<Team>();
-
-        this.database = FirebaseDatabase.getInstance();
-        this.myRef  = database.getReference("Teams");
-
-        match_number = getIntent().getStringExtra("match_number");
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot teamSnapshot: dataSnapshot.getChildren()) {
-//                    Team team = teamSnapshot.getValue(Team.class);
-                    Team team = new Team();
-                    String name = (String) teamSnapshot.child("Name").getValue();
-                    long number = (Long) teamSnapshot.child("Number").getValue();
-
-                    team.Name = name;
-                    team.Number = number;
-                    list.add(team);
-                }
-                updateListView(list);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
-        });
+        if(!readTeamsFromFile(list)) {
+            Log.d("Teams activity","Reading from firebase");
+            readTeamsFromFirebase(list);
+            writeTeamsToFile(list);
+        }
+        Log.d("Teams activity","list len:" +list.size());
 
         updateListView(list);
 
@@ -94,7 +84,7 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
                     searchView.setQuery("", false);
                 }
 
-                autoGame(selectedTeam.Number);
+                autoGame(selectedTeam.Number,selectedTeam.Name);
 
 
             }
@@ -102,7 +92,80 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
         });
 
 
+    }
 
+    private void readTeamsFromFirebase(final ArrayList<Team> list) {
+        this.database = FirebaseDatabase.getInstance();
+        this.myRef = database.getReference("Teams");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot teamSnapshot : dataSnapshot.getChildren()) {
+//                    Team team = teamSnapshot.getValue(Team.class);
+                    Team team = new Team();
+                    String name = (String) teamSnapshot.child("Name").getValue();
+                    long number = (Long) teamSnapshot.child("Number").getValue();
+
+                    team.Name = name;
+                    team.Number = number;
+                    list.add(team);
+                }
+                updateListView(list);
+                writeTeamsToFile(list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
+    }
+
+    public void writeTeamsToFile(ArrayList<Team> data) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getApplicationContext().openFileOutput(TEAMS_FILE_NAME, Context.MODE_PRIVATE));
+            StringBuilder teamStrBuilder = new StringBuilder();
+            for (Team t : data) {
+                Log.d("Teams activity","writing team " + t.Number);
+                teamStrBuilder.append(t.Number + "," + t.Name + "\n");
+            }
+
+            outputStreamWriter.write(teamStrBuilder.toString());
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    private boolean readTeamsFromFile(final ArrayList<Team> list) {
+
+
+        try {
+            InputStream inputStream = getApplicationContext().openFileInput(TEAMS_FILE_NAME);
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    String[] parts = receiveString.split(",");
+                    list.add(new Team(Long.parseLong(parts[0]), parts[1]));
+                }
+
+                inputStream.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("Team select activity", "File not found: " + e.toString());
+            return false;
+        } catch (IOException e) {
+            Log.e("Team select activity", "Can not read file: " + e.toString());
+            return false;
+        }
+        return true;
     }
 
     public void updateListView(ArrayList<Team> list) {
@@ -112,10 +175,12 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
         this.listview.setAdapter(adapter);
     }
 
-    public void autoGame(Long teamNumber) {
+    public void autoGame(Long teamNumber,String teamName) {
         Intent intent = new Intent(this, AutoGame.class);
-        intent.putExtra("teamNumber", teamNumber);
-        intent.putExtra("match_number",match_number);
+        intent.putExtra("team_number", teamNumber);
+        intent.putExtra("team_name",teamName);
+        intent.putExtra("is_auto",true);
+        intent.putExtras(getIntent());
         startActivity(intent);
 
     }
@@ -201,7 +266,7 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
 
         @Override
         public Filter getFilter() {
-            if(teamFilter == null)
+            if (teamFilter == null)
                 teamFilter = new TeamFilter();
             return teamFilter;
         }
@@ -211,7 +276,7 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
-                if (constraint!=null && constraint.length()>0) {
+                if (constraint != null && constraint.length() > 0) {
                     ArrayList<Team> tempList = new ArrayList<Team>();
 
                     // search content in friend list
@@ -233,8 +298,9 @@ public class TeamSelectActivity extends AppCompatActivity implements SearchView.
 
             /**
              * Notify about filtered list to ui
+             *
              * @param constraint text
-             * @param results filtered result
+             * @param results    filtered result
              */
             @SuppressWarnings("unchecked")
             @Override

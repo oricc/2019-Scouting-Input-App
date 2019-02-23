@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ranlevy.myapplication">
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,12 +33,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TeamSelectActivity" />
-
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
         </activity>
-        />
         <activity
             android:name=".AutoGame"
             android:label="Auto Game"
@@ -71,11 +78,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".End" />
         </activity>
-        <activity android:name=".Climb"
+        <activity
+            android:name=".Climb"
             android:label="Climb"
-            android:parentActivityName=".Climb">
-
-        </activity>
+            android:parentActivityName=".Climb"></activity>
     </application>
 
 </manifest>

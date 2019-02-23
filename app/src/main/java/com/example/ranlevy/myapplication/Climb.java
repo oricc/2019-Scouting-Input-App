@@ -11,35 +11,18 @@ import android.widget.Button;
 public class Climb extends AppCompatActivity {
 
 
-    int ClimbAloneCount = 0;
-    Button climbAloneIncButton;
-    int HelpedToClimb= 0;
-    Button HelpedToClimbButton;
-    int Theydidnotclimb = 0;
-    Button TheydidnotclimbIncButton;
-    long teamNumber, autoSwitchCount, autoScaleCount, autoLineCount, SwitchCount, ScaleCount, ExchangeCount, toString, autoexchangeCount, Data, EnemySwitchCount;
     Button level0c;
     Button level1c;
     Button level2c;
     Button level3c;
-    String climbLevel = "?";
+    int climbLevel = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_climb);
-        Intent intent = getIntent();
 
         Log.d("STAM", "Climb");
-        this.teamNumber = intent.getLongExtra("teamNumber", 0);
-        this.autoSwitchCount = intent.getLongExtra("autoSwitchCount", 0);
-        this.autoScaleCount = intent.getLongExtra("autoScaleCount", 0);
-        this.autoLineCount = intent.getLongExtra("autoLineCount", 0);
-        this.SwitchCount = intent.getIntExtra("SwitchCount", 0);
-        this.ScaleCount = intent.getIntExtra("ScaleCount", 0);
-        this.ExchangeCount = intent.getIntExtra("ExchangeCount", 0);
-        this.autoexchangeCount = intent.getLongExtra("autoexchangeCount", 0);
-        this.EnemySwitchCount = intent.getIntExtra("EnemySwitchCount", 0);
 
 
         this.level1c = (Button) findViewById(R.id.level1c);
@@ -53,7 +36,7 @@ public class Climb extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                climbLevel = "level 1";
+                climbLevel = 1;
                 for (int i = 0; i < levelBtns.length; i++)
                     levelBtns[i].setText(originalLevelText[i]);
                 level1c.setText("climb: level 1");
@@ -63,7 +46,7 @@ public class Climb extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                climbLevel = "level 2";
+                climbLevel = 2;
                 for (int i = 0; i < levelBtns.length; i++)
                     levelBtns[i].setText(originalLevelText[i]);
                 level2c.setText("climb: level 2");
@@ -73,7 +56,7 @@ public class Climb extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                climbLevel = "level 3";
+                climbLevel = 3;
                 for (int i = 0; i < levelBtns.length; i++)
                     levelBtns[i].setText(originalLevelText[i]);
                 level3c.setText("climb: level 3");
@@ -83,7 +66,7 @@ public class Climb extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                climbLevel = "level 0";
+                climbLevel = 0;
                 for (int i = 0; i < levelBtns.length; i++)
                     levelBtns[i].setText(originalLevelText[i]);
                 level0c.setText("no climb :(");
@@ -98,86 +81,13 @@ public class Climb extends AppCompatActivity {
 //        this.climbAloneIncButton = (Button) findViewById(R.id.climbAloneIncButton);
 
 
-    public void climbAloneInc(View view) {
-        if (HelpedToClimb<1)
-        {
-            if (Theydidnotclimb<1)
-            {
-                if (ClimbAloneCount<1)
-                {
-                    ClimbAloneCount++;
-                    this.climbAloneIncButton.setText("Climbed Alone " + Integer.toString(this.ClimbAloneCount));
-                }
-            }
-        }
-    }
-    public void climbWithhelp(View view) {
-        if (ClimbAloneCount<1)
-        {
-            if (Theydidnotclimb<1)
-            {
-                if (HelpedToClimb<1)
-                {
-                    HelpedToClimb++;
-                    this.HelpedToClimbButton.setText("Helped To Climb " + Integer.toString(this.HelpedToClimb));
-                }
 
-            }
-        }
-    }
-    public void Theydidnotclimb(View view) {
-
-
-        if (HelpedToClimb<1)
-        {
-            if (ClimbAloneCount<1)
-            {
-                if (Theydidnotclimb<1)
-                {
-                    Theydidnotclimb++;
-                    this.TheydidnotclimbIncButton.setText("They did not climb " + Integer.toString(this.Theydidnotclimb));
-                }
-            }
-        }
-    }
-    public void Theydidnotclimbminus(View view) {
-        if (Theydidnotclimb>0)
-        {
-            this.Theydidnotclimb--;
-            this.TheydidnotclimbIncButton.setText("They did not climb  " + Integer.toString(this.Theydidnotclimb));
-        }
-    }
-    public void TClimbWithhelpminus(View view) {
-        if (HelpedToClimb>0)
-        {
-            this.HelpedToClimb--;
-            this.HelpedToClimbButton.setText("Helped To Climb  " + Integer.toString(this.HelpedToClimb));
-        }
-    }
-    public void ClimAlonebCountminus(View view) {
-        if (ClimbAloneCount>0)
-        {
-            this.ClimbAloneCount--;
-            this.climbAloneIncButton.setText("Climbed Alone  " + Integer.toString(this.ClimbAloneCount));
-        }
-    }
-    public void a(View view) {
+    public void end(View view) {
 
         Intent intent = new Intent(this, PersonalFeedback.class);
-        intent.putExtra("teamNumber", teamNumber);
-        intent.putExtra("autoSwitchCount", autoSwitchCount);
-        intent.putExtra("autoScaleCount", autoScaleCount);
-        intent.putExtra("autoLineCount", autoLineCount);
-        intent.putExtra("SwitchCount", SwitchCount);
-        intent.putExtra("ScaleCount", ScaleCount);
-        intent.putExtra("ExchangeCount", ExchangeCount);
-        intent.putExtra("autoexchangeCount", autoexchangeCount);
-        intent.putExtra("ClimbAloneCount", ClimbAloneCount);
-        intent.putExtra("HelpedToClimb", HelpedToClimb);
-        intent.putExtra("Theydidnotclimb", Theydidnotclimb);
-        intent.putExtra("EnemySwitchCount", EnemySwitchCount);
 
-
+        intent.putExtra("climb_level",climbLevel);
+        intent.putExtras(getIntent());
 
 //        EditText editText = (EditText) findViewById(R.id.exchangeIncButton);
 //        String message = editText.getText().toString();

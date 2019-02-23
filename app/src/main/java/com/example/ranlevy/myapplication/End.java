@@ -2,100 +2,113 @@ package com.example.ranlevy.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class End extends AppCompatActivity {
-    int s = 0;
+    boolean submitted = false;
     Button sButton;
-
-    long teamNumber;
-    long autoSwitchCount;
-    long autoScaleCount;
-    long autoLineCount;
-    long SwitchCount;
-    long ScaleCount;
-    long ExchangeCount;
-    long ClimbAloneCount;
-    long toString;
-    long autoexchangeCount;
-    long ClimbNotAloneCount;
-    long HelpedToClimb;
-    long Theydidnotclimb;
-    long EnemySwitchCount;
     String matchNumber;
+
+    String[] allScoutingKeys = {
+            "team_number", "match_number", "submitter",
+            "auto_start_level",
+            "auto_rocket_cargo_low", "auto_rocket_cargo_medium", "auto_rocket_cargo_high",
+            "auto_rocket_hatch_low", "auto_rocket_hatch_medium", "auto_rocket_hatch_high",
+            "auto_ship_cargo", "auto_ship_hatch",
+            "teleop_rocket_cargo_low", "teleop_rocket_cargo_medium", "teleop_rocket_cargo_high",
+            "teleop_rocket_hatch_low", "teleop_rocket_hatch_medium", "teleop_rocket_hatch_high",
+            "teleop_ship_cargo", "teleop_ship_hatch",
+            "climb_level",
+            "personal_feedback"
+
+    };
+
+    String TAG = "End activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end);
-        Intent intent = getIntent();
-        this.teamNumber = intent.getLongExtra("teamNumber", 0);
-        this.autoSwitchCount = intent.getLongExtra("autoSwitchCount", 0);
-        this.autoScaleCount = intent.getLongExtra("autoScaleCount", 0);
-        this.autoLineCount = intent.getLongExtra("autoLineCount", 0);
-        this.SwitchCount = intent.getLongExtra("SwitchCount", 0);
-        this.ScaleCount = intent.getLongExtra("ScaleCount", 0);
-        this.ExchangeCount = intent.getLongExtra("ExchangeCount", 0);
-        this.ClimbAloneCount = intent.getLongExtra("ClimbAloneCount", 0);
-        this.autoexchangeCount = intent.getLongExtra("autoexchangeCount", 0);
-        this.HelpedToClimb = intent.getIntExtra("HelpedToClimb", 0);
-        this.Theydidnotclimb = intent.getIntExtra("Theydidnotclimb", 0);
-        this.EnemySwitchCount = intent.getLongExtra("EnemySwitchCount", 0);
-        this.matchNumber = "Qual_"+getApplicationContext().getSharedPreferences("match_number", Context.MODE_PRIVATE).getString("match_number","0000");
+        this.matchNumber = "Qual_" + getApplicationContext().getSharedPreferences("match_number", Context.MODE_PRIVATE).getString("match_number", "0000");
 
 
         this.sButton = (Button) findViewById(R.id.sButton);
+
+//        save(sButton);
+        uploadToFirestore();
     }
 
-    public void save(View view) {
 
-        if (s < 1) {
-            // Write a message to the database
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public void uploadToFirestore() {
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
 
-
-            DatabaseReference myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/autoSwitch");
-            myRef.setValue(this.autoSwitchCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/autoScale");
-            myRef.setValue(this.autoScaleCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/autoLine");
-            myRef.setValue(this.autoLineCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/Switch");
-            myRef.setValue(this.SwitchCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/Scale");
-            myRef.setValue(this.ScaleCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/Exchange");
-            myRef.setValue(this.ExchangeCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/ClimbAlone");
-            myRef.setValue(this.ClimbAloneCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/autoexchange");
-            myRef.setValue(this.autoexchangeCount);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/HelpedToClimb");
-            myRef.setValue(this.HelpedToClimb);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/Theydidnotclimb");
-            myRef.setValue(this.Theydidnotclimb);
-            myRef = database.getReference("Scores/" + this.teamNumber + "/" + this.matchNumber + "/EnemySwitchCount");
-            myRef.setValue(this.EnemySwitchCount);
-
-
-            this.sButton.setText("הוגש");
-
+        Long teamNumber = extras.getLong("team_number");
+        String teamName = extras.getString("team_name");
+        Map<String, Object> scoutingReport = new HashMap<>();
+        for (String key : allScoutingKeys) {
+            scoutingReport.put(key, extras.get(key));
         }
+
+        db.collection("Teams")
+                .document(teamNumber + "")
+                .update("number",teamNumber,"name",teamName);
+        db.collection("Teams")
+                .document(teamNumber + "")
+                .collection("Games")
+                .add(scoutingReport);
+
+        // Create a new user with a first and last name
+//        Map<String, Object> user = new HashMap<>();
+//        user.put("first", "Ada");
+//        user.put("last", "Lovelace");
+//        user.put("born", 1815);
+
+// Add a new document with a generated ID
+//        db.collection("users")
+//                .add(user)
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error adding document", e);
+//                    }
+//                });
+
+
     }
 
     public void NewGame(View view) {
-        Intent intent = new Intent(this, TeamSelectActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

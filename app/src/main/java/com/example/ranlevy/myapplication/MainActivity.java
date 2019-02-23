@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         String num = matchNumber.getText().toString();
         String sub = subName.getText().toString();
         if((num == null || num.equals(""))||(sub == null || sub.equals("")))
-            Toast.makeText(this,"Must enter shit",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"You must enter both name and match number",Toast.LENGTH_SHORT);
         else {
             Intent intent = new Intent(this, TeamSelectActivity.class);
             intent.putExtra("match_number", num);

@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\USER\Documents\AS\TrigonScouting-master\AndroidExample.iml" filepath="C:\Users\USER\Documents\AS\TrigonScouting-master\AndroidExample.iml" />
-      <module fileurl="file://C:\Users\user\AndroidStudioProjects\trigonscouting\AndroidExample.iml" filepath="C:\Users\user\AndroidStudioProjects\trigonscouting\AndroidExample.iml" />
-      <module fileurl="file://C:\Users\USER\StudioProjects\TrigonScouting\AndroidExample.iml" filepath="C:\Users\USER\StudioProjects\TrigonScouting\AndroidExample.iml" />
-      <module fileurl="file://C:\Users\USER\Documents\AS\TrigonScouting-master\TrigonScouting.iml" filepath="C:\Users\USER\Documents\AS\TrigonScouting-master\TrigonScouting.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TrigonScouting-master.iml" filepath="$PROJECT_DIR$/TrigonScouting-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/2019-Scouting-Input-App.iml" filepath="$PROJECT_DIR$/2019-Scouting-Input-App.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\USER\Documents\AS\TrigonScouting-master\app\app.iml" filepath="C:\Users\USER\Documents\AS\TrigonScouting-master\app\app.iml" />
     </modules>
   </component>
 </project>

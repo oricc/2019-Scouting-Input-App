@@ -8,6 +8,14 @@ public class Team {
     Long Number;
     String Name;
 
+    public Team(){
+        Number = 0L;
+        Name = "";
+    }
+    public Team(Long number,String name){
+        this.Name = name;
+        this.Number = number;
+    }
     public Long getNumber() {
         return Number;
     }

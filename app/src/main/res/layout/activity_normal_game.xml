@@ -10,6 +10,10 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
@@ -17,162 +21,233 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <GridLayout
+            <ImageView
+                android:id="@+id/rocket_image"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:srcCompat="@mipmap/rocket"
+                tools:layout_editor_absoluteX="207dp"
+                tools:layout_editor_absoluteY="2dp" />
+            <TableLayout
+                android:id="@+id/rocket_score_table"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnCount="2">
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:stretchColumns="1,2"
+                app:layout_constraintBottom_toTopOf="@id/cargo_ship_image"
+                app:layout_constraintLeft_toLeftOf="parent"
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="177dp"
-                    android:layout_height="201dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@mipmap/rocket" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
+                <TableRow
+                    android:id="@+id/rocket_table_title_row"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="-30dp"
-                    android:orientation="vertical"
-                    android:paddingLeft="33dp">
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:text="Height"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:text="Hatch"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:text="Cargo"
+                        android:textSize="30sp" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rocket_table_high_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:text="High"
+                        android:textSize="30dp" />
 
                     <Button
-                        android:id="@+id/high"
-                        android:layout_width="150dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="33dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/holo_orange_light"
-                        android:text="HIGH"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:id="@+id/normal_game_hatch_high_inc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:background="#fff711"
+                        android:text="0"
+                        android:textSize="40sp"
+                        android:onClick="updateCounter"/>
 
                     <Button
-                        android:id="@+id/medium"
-                        android:layout_width="150dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/holo_blue_light"
-                        android:text="medium"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.38"
-                        app:layout_constraintStart_toEndOf="@+id/imageView"
-                        app:layout_constraintTop_toBottomOf="@+id/button3" />
+                        android:id="@+id/normal_game_cargo_high_inc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:background="@android:color/holo_orange_dark"
+                        android:text="0"
+                        android:textSize="40sp"
+                        android:onClick="updateCounter"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rocket_table_high_decrease_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView android:text="" />
 
                     <Button
-                        android:id="@+id/low"
-                        android:layout_width="150dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/holo_green_light"
-                        android:text="LOW"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.428"
-                        app:layout_constraintStart_toEndOf="@+id/imageView"
-                        app:layout_constraintTop_toBottomOf="@+id/button9" />
+                        android:id="@+id/normal_game_hatch_high_dec"
+                        android:layout_width="wrap_content"
+                        android:background="@android:color/holo_blue_dark"
+                        android:text="-1"
+                        android:textSize="20sp"
+                        android:onClick="updateCounter"/>
 
-                </LinearLayout>
+                    <Button
+                        android:id="@+id/normal_game_cargo_high_dec"
+                        android:layout_width="wrap_content"
+                        android:background="@android:color/holo_red_dark"
+                        android:text="-1"
+                        android:textSize="20sp"
+                        android:onClick="updateCounter"/>
+                </TableRow>
 
-            </GridLayout>
+                <TableRow
+                    android:id="@+id/rocket_table_medium_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <GridLayout
+                    <TextView
+                        android:text="Medium"
+                        android:textSize="30sp" />
+
+                    <Button
+                        android:id="@+id/normal_game_hatch_medium_inc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:background="#fff711"
+                        android:text="0"
+                        android:textSize="40sp"
+                        android:onClick="updateCounter"/>
+
+                    <Button
+                        android:id="@+id/normal_game_cargo_medium_inc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:background="@android:color/holo_orange_dark"
+                        android:text="0"
+                        android:textSize="40sp"
+                        android:onClick="updateCounter"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rocket_table_medium_decrease_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView android:text="" />
+
+                    <Button
+                        android:id="@+id/normal_game_hatch_medium_dec"
+                        android:layout_width="wrap_content"
+                        android:background="@android:color/holo_blue_dark"
+                        android:text="-1"
+                        android:textSize="20sp"
+                        android:onClick="updateCounter"/>
+
+                    <Button
+                        android:id="@+id/normal_game_cargo_medium_dec"
+                        android:layout_width="wrap_content"
+                        android:background="@android:color/holo_red_dark"
+                        android:text="-1"
+                        android:textSize="20sp"
+                        android:onClick="updateCounter"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rocket_table_low_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:text="Low"
+                        android:textSize="30sp" />
+
+                    <Button
+                        android:id="@+id/normal_game_hatch_low_inc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:background="#fff711"
+                        android:text="0"
+                        android:textSize="40sp"
+                        android:onClick="updateCounter"/>
+
+                    <Button
+                        android:id="@+id/normal_game_cargo_low_inc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:background="@android:color/holo_orange_dark"
+                        android:text="0"
+                        android:textSize="40sp"
+                        android:onClick="updateCounter"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rocket_table_low_decrease_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView android:text="" />
+
+                    <Button
+                        android:id="@+id/normal_game_hatch_low_dec"
+                        android:layout_width="wrap_content"
+                        android:background="@android:color/holo_blue_dark"
+                        android:text="-1"
+                        android:textSize="20sp"
+                        android:onClick="updateCounter"/>
+
+                    <Button
+                        android:id="@+id/normal_game_cargo_low_dec"
+                        android:layout_width="wrap_content"
+                        android:background="@android:color/holo_red_dark"
+                        android:text="-1"
+                        android:textSize="20sp"
+                        android:onClick="updateCounter"/>
+                </TableRow>
+            </TableLayout>
+
+
+            <ImageView
+                android:id="@+id/cargo_ship_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="150dp"
+                app:srcCompat="@mipmap/cargos"
+                tools:layout_editor_absoluteX="207dp"
+                tools:layout_editor_absoluteY="2dp" />
 
-                <Button
-                    android:id="@+id/hatchRocket"
-                    android:layout_width="175dp"
-                    android:layout_height="125dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@android:color/holo_blue_bright"
-                    android:text="HATCH"
-                    android:textSize="30dp" />
-
-
-                <Button
-                    android:id="@+id/cargoRocket"
-                    android:layout_width="175dp"
-                    android:layout_height="125dp"
-                    android:layout_column="2"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_row="0"
-                    android:background="@android:color/holo_red_light"
-                    android:text="CARGO"
-                    android:textSize="30dp" />
-            </GridLayout>
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/hatchRocketDec"
-                    android:layout_width="175dp"
-                    android:layout_height="50dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:text="HATCH -1" />
-
-                <Button
-                    android:id="@+id/cargoRocketDec"
-                    android:layout_width="175dp"
-                    android:layout_height="50dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@android:color/holo_red_dark"
-                    android:text="CARGO -1" />
-
-            </GridLayout>
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/imageView15"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    app:srcCompat="@mipmap/cargos"
-                    tools:layout_editor_absoluteX="207dp"
-                    tools:layout_editor_absoluteY="2dp" />
-
-            </GridLayout>
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp">
-
                 <Button
-                    android:id="@+id/hatchcargo"
+                    android:id="@+id/normal_game_cargoship_hatch"
                     android:layout_width="175dp"
                     android:layout_height="125dp"
                     android:layout_marginRight="16dp"
-                    android:background="@android:color/holo_blue_bright"
+                    android:background="#fff711"
                     android:text="HATCH"
                     android:textSize="30dp" />
 
                 <Button
-                    android:id="@+id/cargocargo"
+                    android:id="@+id/normal_game_cargoship_cargo"
                     android:layout_width="175dp"
                     android:layout_height="125dp"
                     android:layout_marginRight="16dp"
-                    android:background="@android:color/holo_red_light"
+                    android:background="@android:color/holo_orange_dark"
                     android:text="CARGO"
                     android:textSize="30dp" />
 
@@ -183,7 +258,7 @@
                 android:layout_height="match_parent">
 
                 <Button
-                    android:id="@+id/hatchcargoDec"
+                    android:id="@+id/normal_game_cargoship_hatch_dec"
                     android:layout_width="175dp"
                     android:layout_height="50dp"
                     android:layout_marginRight="16dp"
@@ -191,26 +266,24 @@
                     android:text="hatch -1" />
 
                 <Button
-                    android:id="@+id/cargocargoDec"
+                    android:id="@+id/normal_game_cargoship_cargo_dec"
                     android:layout_width="175dp"
                     android:layout_height="50dp"
                     android:layout_marginRight="16dp"
                     android:background="@android:color/holo_red_dark"
-
                     android:text="cargo -1" />
             </GridLayout>
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="30dp"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="30dp">
 
                 <Button
                     android:id="@+id/climb"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:onClick="climb"
                     android:text="climb" />
             </GridLayout>
 
